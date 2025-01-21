@@ -11,13 +11,13 @@ typedef struct node {
 } NODE;
 
 int party[51][51] = { 0 }; // 파티 정보 저장 배열 (파티당 최대 50명)
-NODE arr[51];              // 사람들의 분리 집합 노드 배열
+NODE div_set[51];              // 사람들의 분리 집합 노드 배열
 
 // 분리 집합에서 루트 노드(대표자)를 찾는 함수
 int Find(int a) {
-    if (a == arr[a].parent) // 자신이 루트 노드라면
+    if (a == div_set[a].parent) // 자신이 루트 노드라면
         return a;
-    return arr[a].parent = Find(arr[a].parent); // 경로 압축을 적용하며 루트 노드 반환
+    return div_set[a].parent = Find(div_set[a].parent); // 경로 압축을 적용하며 루트 노드 반환
 }
 
 // 두 분리 집합을 병합하는 함수
@@ -26,10 +26,10 @@ void merge(int a, int b) {
     int y = Find(b); // b의 대표자 찾기
     if (x == y) // 이미 같은 집합이라면 병합할 필요 없음
         return;
-    if (arr[x].Rank == 1) { // x가 진실을 아는 집합이라면
-        arr[y].parent = x; // y를 x에 병합
+    if (div_set[x].Rank == 1) { // x가 진실을 아는 집합이라면
+        div_set[y].parent = x; // y를 x에 병합
     } else {
-        arr[x].parent = y; // 그렇지 않으면 x를 y에 병합
+        div_set[x].parent = y; // 그렇지 않으면 x를 y에 병합
     }
 }
 
@@ -41,12 +41,12 @@ int main() {
     for (int i = 0; i < T; i++) {
         int tmp;
         cin >> tmp;
-        arr[tmp].Rank = 1; // 진실을 아는 사람 표시
+        div_set[tmp].Rank = 1; // 진실을 아는 사람 표시
     }
 
     // 초기화: 각 사람의 부모를 자기 자신으로 설정
     for (int i = 1; i <= N; i++) {
-        arr[i].parent = i;
+        div_set[i].parent = i;
     }
 
     // 각 파티의 참가자 정보 입력
@@ -73,7 +73,7 @@ int main() {
     // 각 파티가 거짓말이 가능한지 검사
     for (int i = 0; i < M; i++) {
         for (int j = 1; j <= party[i][0]; j++) {
-            if (arr[Find(party[i][j])].Rank) {
+            if (div_set[Find(party[i][j])].Rank) {
                 // 파티 참가자가 진실을 아는 집합에 속하면 거짓말 불가능
                 break;
             } else if (j == party[i][0]) {
