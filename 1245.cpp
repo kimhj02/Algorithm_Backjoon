@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
 using namespace std;
 
 int N, M;
@@ -41,18 +41,18 @@ int main() {
         }
     }
 
-    int answer = 0;
+    int count = 0;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
             if (!visited[i][j]) {
                 isPeak = true;
                 visited[i][j] = true;  // 방문 처리
                 DFS(i, j);
-                if (isPeak) answer++;
+                if (isPeak) count++;
             }
         }
     }
 
-    cout << answer << '\n';
+    cout << count << '\n';
     return 0;
 }
